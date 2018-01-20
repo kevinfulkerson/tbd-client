@@ -24,8 +24,7 @@ include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${TBD_ROOT_DIR})
 
 set(sourceFiles 
-    ${PROJECT_SOURCE_DIR}/main.cpp
-    ${PROJECT_SOURCE_DIR}/src/logging/Logger.cpp)
+    ${PROJECT_SOURCE_DIR}/main.cpp)
 
 add_executable(tbd-client ${sourceFiles})
 
