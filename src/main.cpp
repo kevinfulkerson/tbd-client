@@ -19,7 +19,7 @@ int main(int, char *[]) {
         return -1;
     }
 
-    auto *pImage = SDL_LoadBMP("./resources/skelly-test.bmp");
+    auto *pImage = SDL_LoadBMP("../res/skelly-test.bmp");
     if (pImage == nullptr) {
         std::cout << "SDL_LoadBMP: " << SDL_GetError() << std::endl;
         return -1;
