@@ -34,8 +34,8 @@
                 "/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed",
                 "/usr/include/x86_64-linux-gnu",
                 "/usr/include",
-                "${workspaceRoot}",
-                "/usr/local/include/SDL2"
+                "/usr/local/include/SDL2",
+                "${workspaceRoot}"
             ],
             "defines": [],
             "intelliSenseMode": "clang-x64",
@@ -49,6 +49,7 @@
                     "/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed",
                     "/usr/include/x86_64-linux-gnu",
                     "/usr/include",
+                    "/usr/local/include/SDL2",
                     "${workspaceRoot}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
@@ -59,6 +60,7 @@
             "name": "Win32",
             "includePath": [
                 "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include",
+                "C:/MinGW/include/SDL2",
                 "${workspaceRoot}"
             ],
             "defines": [
@@ -69,6 +71,7 @@
             "browse": {
                 "path": [
                     "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include/*",
+                    "C:/MinGW/include/SDL2/*",
                     "${workspaceRoot}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,

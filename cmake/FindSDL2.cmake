@@ -74,6 +74,8 @@ SET(SDL2_SEARCH_PATHS
 	/opt/local # DarwinPorts
 	/opt/csw # Blastwave
 	/opt
+	/usr/local/cross-tools/i686-w64-mingw32
+	/usr/local/cross-tools/x86_64-w64-mingw32
 )
 
 FIND_PATH(SDL2_INCLUDE_DIR SDL.h
