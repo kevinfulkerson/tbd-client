@@ -20,11 +20,11 @@ endif()
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 
-#add_subdirectory(${PROJECT_SOURCE_DIR}/src/logging ${PROJECT_BINARY_DIR}/logging)
 include_directories(${TBD_ROOT_DIR})
 
 set(sourceFiles 
-    ${PROJECT_SOURCE_DIR}/src/main.cpp)
+    ${PROJECT_SOURCE_DIR}/src/main.cpp
+	${PROJECT_SOURCE_DIR}/src/engine/core/Engine.cpp)
 
 add_executable(tbd-client ${sourceFiles})
 
