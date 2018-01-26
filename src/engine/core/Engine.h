@@ -1,17 +1,19 @@
 #include "SDL.h"
+#include "../rendering/RenderingSystem.h"
+#include "../input/InputSystem.h"
 
 class Engine
 {
-  public:
-    Engine();
-    virtual ~Engine();
+public:
+  Engine();
+  virtual ~Engine();
 
-    void Start();
-    void Stop();
+  void Init();
+  void Start();
+  void Stop();
 
-  private:
-    SDL_Window *m_pWindow;
-    SDL_Surface *m_pScreenSurface;
-    SDL_Surface *m_pImage;
-    bool m_running;
+private:
+  bool m_running;
+  RenderingSystem *m_pRenderingSystem;
+  InputSystem *m_pInputSystem;
 };
