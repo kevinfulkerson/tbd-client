@@ -1,4 +1,4 @@
-#include "RenderingSystem.h"
+#include "RenderingSystem.hpp"
 #include <iostream>
 
 RenderingSystem::RenderingSystem() : m_pWindow(nullptr),

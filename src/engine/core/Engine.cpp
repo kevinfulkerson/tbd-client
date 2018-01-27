@@ -1,7 +1,7 @@
-#include "Engine.h"
+#include "Engine.hpp"
 #include <iostream>
 
-Engine::Engine() : m_running(false)
+Engine::Engine() : m_running(true)
 {
 }
 
@@ -21,8 +21,6 @@ void Engine::Init()
 
 void Engine::Start()
 {
-    m_running = true;
-
     while (m_running)
     {
         // Poll for any events on the queue
