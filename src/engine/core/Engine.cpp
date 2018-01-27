@@ -1,4 +1,5 @@
 #include "Engine.hpp"
+#include <cstdio>
 #include <iostream>
 
 Engine::Engine() : m_running(true)
@@ -16,6 +17,8 @@ void Engine::Init()
     m_pInputSystem = new InputSystem();
 
     m_pRenderingSystem->Init();
+    m_pRenderingSystem->SetFPS(60);
+
     m_pInputSystem->Init();
 }
 
@@ -29,7 +32,14 @@ void Engine::Start()
             this->Stop();
         }
 
-        m_pRenderingSystem->Render();
+        if (m_pRenderingSystem->ApplyRenderingStrategy())
+        {
+            m_pRenderingSystem->Render();
+        }
+        else
+        {
+            SDL_Delay(1);
+        }
     }
 }
 

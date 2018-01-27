@@ -1,10 +1,12 @@
 #include "RenderingSystem.hpp"
 #include <iostream>
+#include <string>
 
 RenderingSystem::RenderingSystem() : m_pWindow(nullptr),
                                      m_pScreenSurface(nullptr),
                                      m_pImage(nullptr)
 {
+    m_previousFrameTime_ms = m_frameTime_ms = SDL_GetTicks();
 }
 
 /* virtual */
@@ -41,6 +43,25 @@ void RenderingSystem::Init()
     {
         std::cout << "SDL_LoadBMP: " << SDL_GetError() << std::endl;
     }
+}
+
+void RenderingSystem::SetFPS(uint32_t fps)
+{
+    m_frameTime_ms = 1000.f/fps;
+}
+
+bool RenderingSystem::ApplyRenderingStrategy()
+{
+    bool renderFrame = false;
+
+    uint32_t currentFrameTime = SDL_GetTicks();
+    if (currentFrameTime - m_previousFrameTime_ms > m_frameTime_ms)
+    {
+        m_previousFrameTime_ms = currentFrameTime;
+        renderFrame = true;
+    }
+
+    return renderFrame;
 }
 
 void RenderingSystem::Render()

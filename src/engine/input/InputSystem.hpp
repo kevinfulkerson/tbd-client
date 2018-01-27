@@ -2,13 +2,13 @@
 
 class InputSystem
 {
-    public:
-        InputSystem();
-        virtual ~InputSystem();
+  public:
+    InputSystem();
+    virtual ~InputSystem();
 
-        void Init();
-        int HandleInput();
+    void Init();
+    int HandleInput();
 
-    private:
-        SDL_Event m_event;
+  private:
+    SDL_Event m_event;
 };
