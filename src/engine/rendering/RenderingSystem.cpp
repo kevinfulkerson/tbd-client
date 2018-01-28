@@ -2,11 +2,14 @@
 #include <iostream>
 #include <string>
 
+#include "GL/glew.h"
+#include "glm/glm.hpp"
+
 RenderingSystem::RenderingSystem() : m_pWindow(nullptr),
-                                     m_pScreenSurface(nullptr),
-                                     m_pImage(nullptr)
+                                     m_pGLContext(nullptr)
 {
-    m_previousFrameTime_ms = m_frameTime_ms = SDL_GetTicks();
+    m_previousFrameTime_ms = SDL_GetTicks();
+    m_frameTime_ms = 1000 / 60;
 }
 
 /* virtual */
@@ -14,40 +17,41 @@ RenderingSystem::~RenderingSystem()
 {
 }
 
-void RenderingSystem::Init()
+bool RenderingSystem::Init()
 {
-    // Initialize the SDL subsystem
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
-    {
-        std::cout << "SDL_Init: " << SDL_GetError() << std::endl;
-    }
+    bool initialized = true;
 
     // Create an SDL window
-    m_pWindow = SDL_CreateWindow("Hello World!", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
+    m_pWindow = SDL_CreateWindow("TBD Client",
+                                 SDL_WINDOWPOS_CENTERED,
+                                 SDL_WINDOWPOS_CENTERED,
+                                 0, 0,
+                                 SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_OPENGL);
     if (m_pWindow == nullptr)
     {
         std::cout << "SDL_CreateWindow: " << SDL_GetError() << std::endl;
+        return false;
     }
 
-    // Get the window surface for the window we just opened
-    m_pScreenSurface = SDL_GetWindowSurface(m_pWindow);
-    if (m_pScreenSurface == nullptr)
+    m_pGLContext = SDL_GL_CreateContext(m_pWindow);
+    if (m_pGLContext == nullptr)
     {
-        std::cout << "SDL_GetWindowSurface: " << SDL_GetError() << std::endl;
+        std::cout << "SDL_GL_CreateContext: " << SDL_GetError() << std::endl;
+        return false;
     }
 
-    // Open a bmp file
-    // Admittedly, this is very dependent on location of executable
-    m_pImage = SDL_LoadBMP("../res/skelly-test.bmp");
-    if (m_pImage == nullptr)
+    if (glewInit() != GLEW_OK)
     {
-        std::cout << "SDL_LoadBMP: " << SDL_GetError() << std::endl;
+        std::cout << "glewInit: Failed to initialize GLEW" << std::endl;
+        return false;
     }
+
+    return initialized;
 }
 
 void RenderingSystem::SetFPS(uint32_t fps)
 {
-    m_frameTime_ms = 1000.f/fps;
+    m_frameTime_ms = 1000 / fps;
 }
 
 bool RenderingSystem::ApplyRenderingStrategy()
@@ -66,7 +70,18 @@ bool RenderingSystem::ApplyRenderingStrategy()
 
 void RenderingSystem::Render()
 {
-    // Draw our surface image
-    SDL_BlitSurface(m_pImage, nullptr, m_pScreenSurface, nullptr);
-    SDL_UpdateWindowSurface(m_pWindow);
+    SDL_GL_SwapWindow(m_pWindow);
+}
+
+void RenderingSystem::Close()
+{
+    if (m_pGLContext)
+    {
+        SDL_GL_DeleteContext(m_pGLContext);
+    }
+    
+    if (m_pWindow)
+    {
+        SDL_DestroyWindow(m_pWindow);
+    }
 }

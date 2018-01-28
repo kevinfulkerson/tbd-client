@@ -1,4 +1,4 @@
-#include "SDL.h"
+#include "SDL2/SDL.h"
 
 class InputSystem
 {
@@ -6,7 +6,7 @@ class InputSystem
     InputSystem();
     virtual ~InputSystem();
 
-    void Init();
+    bool Init();
     int HandleInput();
 
   private:

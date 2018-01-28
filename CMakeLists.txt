@@ -17,8 +17,15 @@ elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
 	endif()
 endif()
 
+# SDL2
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
+
+# GLEW - currently hardcoded
+if (WIN32)
+	set(GLEW_LIBRARIES "C:/MinGW/lib/libglew32.dll.a")
+	set(GLEW_INCLUDE_DIRS "C:/MinGW/include/GL")
+endif (WIN32)
 
 include_directories(${TBD_ROOT_DIR})
 
@@ -35,3 +42,4 @@ if (UNIX)
 endif (UNIX)
 
 target_link_libraries(tbd-client ${SDL2_LIBRARY})
+target_link_libraries(tbd-client ${GLEW_LIBRARIES})

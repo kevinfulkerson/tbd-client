@@ -34,7 +34,7 @@
                 "/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed",
                 "/usr/include/x86_64-linux-gnu",
                 "/usr/include",
-                "/usr/local/include/SDL2",
+                "/usr/local/include/",
                 "${workspaceRoot}"
             ],
             "defines": [],
@@ -49,7 +49,7 @@
                     "/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed",
                     "/usr/include/x86_64-linux-gnu",
                     "/usr/include",
-                    "/usr/local/include/SDL2",
+                    "/usr/local/include/",
                     "${workspaceRoot}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
@@ -69,7 +69,7 @@
                 "C:/MinGW/include",
                 "C:/MinGW/lib/gcc/mingw32/4.8.1/include-fixed",
                 "C:/MinGW/mingw32/include",
-                "C:/MinGW/include/SDL2",
+                "C:/MinGW/include/",
                 "${workspaceRoot}"
             ],
             "defines": [
@@ -80,7 +80,7 @@
             "browse": {
                 "path": [
                     "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include/*",
-                    "C:/MinGW/include/SDL2/*",
+                    "C:/MinGW/include/*",
                     "${workspaceRoot}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,

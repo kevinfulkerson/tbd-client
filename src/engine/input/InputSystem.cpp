@@ -9,8 +9,9 @@ InputSystem::~InputSystem()
 {
 }
 
-void InputSystem::Init()
+bool InputSystem::Init()
 {
+    return true;
 }
 
 int InputSystem::HandleInput()
