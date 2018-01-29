@@ -27,6 +27,9 @@ if (WIN32)
 	set(GLEW_INCLUDE_DIRS "C:/MinGW/include/GL")
 endif (WIN32)
 
+# OpenGL
+find_package(OpenGL REQUIRED)
+
 include_directories(${TBD_ROOT_DIR})
 
 set(sourceFiles 
@@ -43,3 +46,4 @@ endif (UNIX)
 
 target_link_libraries(tbd-client ${SDL2_LIBRARY})
 target_link_libraries(tbd-client ${GLEW_LIBRARIES})
+target_link_libraries(tbd-client ${OPENGL_LIBRARIES})

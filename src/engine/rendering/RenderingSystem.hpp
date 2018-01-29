@@ -1,6 +1,9 @@
 #include "SDL2/SDL.h"
 #include <cstdint>
 
+#include "GL/glew.h"
+#include "glm/glm.hpp"
+
 class RenderingSystem
 {
 public:
@@ -16,6 +19,8 @@ public:
 private:
   SDL_Window *m_pWindow;
   SDL_GLContext m_pGLContext;
+
+  GLuint m_vertexBuffer;
 
   uint32_t m_previousFrameTime_ms;
   uint32_t m_frameTime_ms;

@@ -2,9 +2,6 @@
 #include <iostream>
 #include <string>
 
-#include "GL/glew.h"
-#include "glm/glm.hpp"
-
 RenderingSystem::RenderingSystem() : m_pWindow(nullptr),
                                      m_pGLContext(nullptr)
 {
@@ -46,6 +43,21 @@ bool RenderingSystem::Init()
         return false;
     }
 
+    GLuint VertexArrayID;
+    glGenVertexArrays(1, &VertexArrayID);
+    glBindVertexArray(VertexArrayID);
+
+    const GLfloat vertexBufferData[] = {
+        -1.0f, -1.0f, 0.0f,
+        1.0f, -1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+    };
+
+    glGenBuffers(1, &m_vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBufferData), vertexBufferData, GL_STATIC_DRAW);
+
     return initialized;
 }
 
@@ -70,6 +82,21 @@ bool RenderingSystem::ApplyRenderingStrategy()
 
 void RenderingSystem::Render()
 {
+    // Vertices
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+    glVertexAttribPointer(
+        0,        // index of vertex attribute to modify
+        3,        // size
+        GL_FLOAT, // type
+        GL_FALSE, // normalized
+        0,        // stride
+        (void *)0 // vertex attribute array buffer offset
+    );
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDisableVertexAttribArray(0);
+
     SDL_GL_SwapWindow(m_pWindow);
 }
 
@@ -79,7 +106,7 @@ void RenderingSystem::Close()
     {
         SDL_GL_DeleteContext(m_pGLContext);
     }
-    
+
     if (m_pWindow)
     {
         SDL_DestroyWindow(m_pWindow);
