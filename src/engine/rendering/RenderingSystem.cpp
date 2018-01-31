@@ -3,7 +3,8 @@
 #include <string>
 
 RenderingSystem::RenderingSystem() : m_pWindow(nullptr),
-                                     m_pGLContext(nullptr)
+                                     m_pGLContext(nullptr),
+                                     m_vertexBuffer(0)
 {
     m_previousFrameTime_ms = SDL_GetTicks();
     m_frameTime_ms = 1000 / 60;
@@ -82,6 +83,9 @@ bool RenderingSystem::ApplyRenderingStrategy()
 
 void RenderingSystem::Render()
 {
+    glClearColor(0.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     // Vertices
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
@@ -102,6 +106,9 @@ void RenderingSystem::Render()
 
 void RenderingSystem::Close()
 {
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glDeleteBuffers(1, &m_vertexBuffer);
+
     if (m_pGLContext)
     {
         SDL_GL_DeleteContext(m_pGLContext);
