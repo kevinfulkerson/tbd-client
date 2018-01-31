@@ -25,6 +25,9 @@ include_directories(${SDL2_INCLUDE_DIR})
 if (WIN32)
 	set(GLEW_LIBRARIES "C:/MinGW/lib/libglew32.dll.a")
 	set(GLEW_INCLUDE_DIRS "C:/MinGW/include/GL")
+elseif (UNIX)
+	set(GLEW_LIBRARIES "/usr/lib/x86_64-linux-gnu/libGLEW.so")
+	set(GLEW_INCLUDE_DIRS "/usr/include/GL")
 endif (WIN32)
 
 # OpenGL
