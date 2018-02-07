@@ -44,9 +44,9 @@ bool RenderingSystem::Init()
         return false;
     }
 
-    GLuint VertexArrayID;
-    glGenVertexArrays(1, &VertexArrayID);
-    glBindVertexArray(VertexArrayID);
+    GLuint vertexArrayId;
+    glGenVertexArrays(1, &vertexArrayId);
+    glBindVertexArray(vertexArrayId);
 
     const GLfloat vertexBufferData[] = {
         -1.0f, -1.0f, 0.0f,
@@ -59,8 +59,12 @@ bool RenderingSystem::Init()
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBufferData), vertexBufferData, GL_STATIC_DRAW);
 
-    Shader vertexShaderTest("../res/vertex_test.shader");
-    this->m_shaders.push_back(vertexShaderTest);
+    Shader shaderTest;
+    shaderTest.AddShader("../res/vertex_test.shader", GL_VERTEX_SHADER);
+    shaderTest.AddShader("../res/fragment_test.shader", GL_FRAGMENT_SHADER);
+    shaderTest.LinkProgram();
+
+    this->m_shaders.push_back(shaderTest);
 
     return initialized;
 }
@@ -86,8 +90,15 @@ bool RenderingSystem::ApplyRenderingStrategy()
 
 void RenderingSystem::Render()
 {
-    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    auto it = this->m_shaders.begin();
+    auto end = this->m_shaders.end();
+    for (; it != end; ++it)
+    {
+        glUseProgram((*it).GetProgramId());
+    }
 
     // Vertices
     glEnableVertexAttribArray(0);
@@ -100,13 +111,6 @@ void RenderingSystem::Render()
         0,        // stride
         (void *)0 // vertex attribute array buffer offset
     );
-
-    auto it = this->m_shaders.begin();
-    auto end = this->m_shaders.end();
-    for (; it != end; ++it)
-    {
-        glUseProgram((*it).GetProgramId());
-    }
     
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glDisableVertexAttribArray(0);
@@ -127,5 +131,12 @@ void RenderingSystem::Close()
     if (m_pWindow)
     {
         SDL_DestroyWindow(m_pWindow);
+    }
+
+    auto it = this->m_shaders.begin();
+    auto end = this->m_shaders.end();
+    for (; it != end; ++it)
+    {
+        (*it).DeleteProgram();
     }
 }

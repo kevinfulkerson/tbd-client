@@ -3,17 +3,13 @@
 #include <sstream>
 #include <vector>
 
-Shader::Shader(const std::string &filePath) : m_shader(0),
-                                              m_program(0)
+Shader::Shader() : m_program(0),
+                   m_shaders(0)
 {
-    this->LoadShader(filePath);
 }
 
 /* virtual */ Shader::~Shader()
 {
-    glDetachShader(this->m_program, this->m_shader);
-    glDeleteShader(this->m_shader);
-    glDeleteProgram(this->m_program);
 }
 
 GLuint Shader::GetProgramId()
@@ -21,7 +17,68 @@ GLuint Shader::GetProgramId()
     return this->m_program;
 }
 
-void Shader::LoadShader(const std::string &filePath)
+void Shader::DeleteProgram()
+{
+    glDeleteProgram(this->m_program);
+}
+
+void Shader::AddShader(const std::string &filePath, const GLenum shaderType)
+{
+    GLuint tempShaderId = glCreateShader(shaderType);
+    if (tempShaderId == 0)
+    {
+        // Could not create a shader
+        return;
+    }
+    
+    if (this->LoadShader(filePath, tempShaderId))
+    {
+        if (this->m_program == 0)
+        {
+            this->m_program = glCreateProgram();
+            if (this->m_program == 0)
+            {
+                // Could not create a program object
+                return;
+            }
+        }
+
+        this->m_shaders.push_back(tempShaderId);
+    }
+}
+
+void Shader::LinkProgram()
+{
+    GLint result = GL_FALSE;
+    int infoLogLength = 0;
+
+    auto it = this->m_shaders.begin();
+    auto end = this->m_shaders.end();
+    for (; it != end; ++it)
+    {
+        glAttachShader(this->m_program, *it);
+    }
+
+    glLinkProgram(this->m_program);
+
+    glGetProgramiv(this->m_program, GL_LINK_STATUS, &result);
+    glGetProgramiv(this->m_program, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+    if (result == GL_FALSE || infoLogLength != 0)
+    {
+        // Could not link the program
+    }
+
+    it = this->m_shaders.begin();
+    end = this->m_shaders.end();
+    for (; it != end; ++it)
+    {
+        glDetachShader(this->m_program, *it);
+        glDeleteShader(*it);
+    }
+}
+
+bool Shader::LoadShader(const std::string &filePath, const GLuint shaderId)
 {
     std::string shaderCode;
     std::ifstream shaderStream(filePath, std::ios::in);
@@ -35,58 +92,25 @@ void Shader::LoadShader(const std::string &filePath)
     else
     {
         // Could not load the file
-        return;
+        return false;
     }
 
     GLint result = GL_FALSE;
     int infoLogLength = 0;
 
-    GLuint tempShaderId = glCreateShader(GL_VERTEX_SHADER);
-    if (tempShaderId == 0)
-    {
-        // Could not create a shader
-        return;
-    }
-
     char const *codeStrPointer = shaderCode.c_str();
-    glShaderSource(tempShaderId, 1, &codeStrPointer, NULL);
-    glCompileShader(tempShaderId);
+    glShaderSource(shaderId, 1, &codeStrPointer, NULL);
+    glCompileShader(shaderId);
 
-    glGetShaderiv(tempShaderId, GL_COMPILE_STATUS, &result);
-    glGetShaderiv(tempShaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
+    glGetShaderiv(shaderId, GL_COMPILE_STATUS, &result);
+    glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-    if (result == GL_FALSE && infoLogLength != 0)
+    if (result == GL_FALSE || infoLogLength != 0)
     {
         // Could not compile the shader
-        glDeleteShader(tempShaderId);
-        return;
+        glDeleteShader(shaderId);
+        return false;
     }
 
-    GLuint tempProgramId = glCreateProgram();
-    if (tempProgramId == 0)
-    {
-        // Could not create a program object
-        // The shader wasn't attached, so just delete the shader
-        glDeleteShader(tempShaderId);
-        return;
-    }
-
-    glAttachShader(tempProgramId, tempShaderId);
-    glLinkProgram(tempProgramId);
-
-    glGetProgramiv(tempProgramId, GL_LINK_STATUS, &result);
-    glGetProgramiv(tempProgramId, GL_INFO_LOG_LENGTH, &infoLogLength);
-
-    if (result == GL_FALSE && infoLogLength != 0)
-    {
-        // Could not link the program
-        glDetachShader(tempProgramId, tempShaderId);
-        glDeleteShader(tempShaderId);
-        return;
-    }
-
-    // Otherwise, we have a working shader program
-    printf("here\n");
-    this->m_program = tempProgramId;
-    this->m_shader = tempShaderId;
+    return true;
 }
