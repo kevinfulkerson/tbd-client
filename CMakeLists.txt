@@ -39,6 +39,7 @@ set(sourceFiles
     ${PROJECT_SOURCE_DIR}/src/main.cpp
 	${PROJECT_SOURCE_DIR}/src/engine/core/Engine.cpp
 	${PROJECT_SOURCE_DIR}/src/engine/input/InputSystem.cpp
+    ${PROJECT_SOURCE_DIR}/src/engine/rendering/Shader.cpp
 	${PROJECT_SOURCE_DIR}/src/engine/rendering/RenderingSystem.cpp)
 
 add_executable(tbd-client ${sourceFiles})

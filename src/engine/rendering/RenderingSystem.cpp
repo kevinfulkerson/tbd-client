@@ -59,6 +59,9 @@ bool RenderingSystem::Init()
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBufferData), vertexBufferData, GL_STATIC_DRAW);
 
+    Shader vertexShaderTest("../res/vertex_test.shader");
+    this->m_shaders.push_back(vertexShaderTest);
+
     return initialized;
 }
 
@@ -83,7 +86,7 @@ bool RenderingSystem::ApplyRenderingStrategy()
 
 void RenderingSystem::Render()
 {
-    glClearColor(0.0, 0.0, 0.0, 1.0);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // Vertices
@@ -98,6 +101,13 @@ void RenderingSystem::Render()
         (void *)0 // vertex attribute array buffer offset
     );
 
+    auto it = this->m_shaders.begin();
+    auto end = this->m_shaders.end();
+    for (; it != end; ++it)
+    {
+        glUseProgram((*it).GetProgramId());
+    }
+    
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glDisableVertexAttribArray(0);
 
