@@ -1,5 +1,6 @@
 #include "Shader.hpp"
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <vector>
 
@@ -67,6 +68,10 @@ void Shader::LinkProgram()
     if (result == GL_FALSE || infoLogLength != 0)
     {
         // Could not link the program
+        std::vector<GLchar> errorLog(infoLogLength);
+	    glGetProgramInfoLog(this->m_program, infoLogLength, &infoLogLength, &errorLog[0]);
+        std::cout << "glLinkProgram: Failed with:" << 
+            std::string(errorLog.begin(), errorLog.end()) << std::endl;
     }
 
     it = this->m_shaders.begin();
@@ -92,11 +97,12 @@ bool Shader::LoadShader(const std::string &filePath, const GLuint shaderId)
     else
     {
         // Could not load the file
+        std::cout << "Failed to open shader file." << std::endl;
         return false;
     }
 
     GLint result = GL_FALSE;
-    int infoLogLength = 0;
+    GLint infoLogLength = 0;
 
     char const *codeStrPointer = shaderCode.c_str();
     glShaderSource(shaderId, 1, &codeStrPointer, NULL);
@@ -108,6 +114,11 @@ bool Shader::LoadShader(const std::string &filePath, const GLuint shaderId)
     if (result == GL_FALSE || infoLogLength != 0)
     {
         // Could not compile the shader
+        std::vector<GLchar> errorLog(infoLogLength);
+	    glGetShaderInfoLog(shaderId, infoLogLength, &infoLogLength, &errorLog[0]);
+        std::cout << "glCompileShader: Failed with:" << 
+            std::string(errorLog.begin(), errorLog.end()) << std::endl;
+
         glDeleteShader(shaderId);
         return false;
     }
