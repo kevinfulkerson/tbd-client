@@ -24,6 +24,7 @@ private:
 
   GLuint m_vertexBuffer;
   std::vector<Shader> m_shaders;
+  glm::mat4 mvp;
 
   uint32_t m_previousFrameTime_ms;
   uint32_t m_frameTime_ms;

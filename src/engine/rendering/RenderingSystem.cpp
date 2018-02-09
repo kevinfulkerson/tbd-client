@@ -1,6 +1,7 @@
 #include "RenderingSystem.hpp"
 #include <iostream>
 #include <string>
+#include "glm/ext.hpp"
 
 RenderingSystem::RenderingSystem() : m_pWindow(nullptr),
                                      m_pGLContext(nullptr),
@@ -23,8 +24,8 @@ bool RenderingSystem::Init()
     m_pWindow = SDL_CreateWindow("TBD Client",
                                  SDL_WINDOWPOS_CENTERED,
                                  SDL_WINDOWPOS_CENTERED,
-                                 0, 0,
-                                 SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_OPENGL);
+                                 640, 480,
+                                 SDL_WINDOW_OPENGL);
     if (m_pWindow == nullptr)
     {
         std::cout << "SDL_CreateWindow: " << SDL_GetError() << std::endl;
@@ -51,7 +52,7 @@ bool RenderingSystem::Init()
     const GLfloat vertexBufferData[] = {
         -1.0f, -1.0f, 0.0f,
         1.0f, -1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f
     };
 
     glGenBuffers(1, &m_vertexBuffer);
@@ -65,6 +66,17 @@ bool RenderingSystem::Init()
     shaderTest.LinkProgram();
 
     this->m_shaders.push_back(shaderTest);
+
+    // Generate the model-view-projection matrix components
+    glm::mat4 projection = glm::perspective(glm::radians(45.f), 640.f / 480.f, 0.1f, 100.f);
+    glm::mat4 view = glm::lookAt(
+        glm::vec3(4, 3, 3),
+        glm::vec3(0, 0, 0),
+        glm::vec3(0, 1, 0));
+    glm::mat4 model = glm::mat4(1.f);
+
+    // Combine the components
+    mvp = projection * view * model;
 
     return initialized;
 }
@@ -97,7 +109,14 @@ void RenderingSystem::Render()
     auto end = this->m_shaders.end();
     for (; it != end; ++it)
     {
-        glUseProgram((*it).GetProgramId());
+        // Cache the id for this shader program
+        GLuint programId = (*it).GetProgramId();
+
+        // Apply the matrix to the shader
+        GLuint matrixId = glGetUniformLocation(programId, "mvp");
+        glUniformMatrix4fv(matrixId, 1, GL_FALSE, &mvp[0][0]);
+
+        glUseProgram(programId);
     }
 
     // Vertices
@@ -111,7 +130,7 @@ void RenderingSystem::Render()
         0,        // stride
         (void *)0 // vertex attribute array buffer offset
     );
-    
+
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glDisableVertexAttribArray(0);
 
