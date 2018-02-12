@@ -1,14 +1,22 @@
 #include "SDL2/SDL.h"
+#include <functional>
 
 class InputSystem
 {
-  public:
-    InputSystem();
-    virtual ~InputSystem();
+public:
+  InputSystem();
+  virtual ~InputSystem();
 
-    bool Init();
-    int HandleInput();
+  bool Init();
+  int RegisterEventHandler(SDL_Keycode key, std::function<void()> handler);
+  int HandleInput();
 
-  private:
-    SDL_Event m_event;
+private:
+  void doNothing();
+
+  SDL_Event m_event;
+
+  // TODO: create a vector of key events to commands
+  bool m_isQPressed;
+  std::function<void()> m_qPressHandler;
 };

@@ -14,7 +14,7 @@ public:
     void LinkProgram();
 
 private:
-    bool LoadShader(const std::string &filePath, const GLuint shaderId);
+    bool loadShader(const std::string &filePath, const GLuint shaderId);
 
     GLuint m_program;
     std::vector<GLuint> m_shaders;

@@ -18,14 +18,18 @@ public:
   void Render();
   void Close();
 
+  void DeleteMe();
+
 private:
   SDL_Window *m_pWindow;
   SDL_GLContext m_pGLContext;
 
   GLuint m_vertexBuffer;
   std::vector<Shader> m_shaders;
-  glm::mat4 mvp;
+  glm::mat4 m_mvp;
 
   uint32_t m_previousFrameTime_ms;
   uint32_t m_frameTime_ms;
+
+  bool m_testVal;
 };

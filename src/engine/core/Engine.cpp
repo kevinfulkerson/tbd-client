@@ -58,6 +58,9 @@ bool Engine::Init()
 
     // Perform any additional initializations
     m_pRenderingSystem->SetFPS(60);
+    m_pInputSystem->RegisterEventHandler(
+        SDLK_q,
+        std::bind(&RenderingSystem::DeleteMe, this->m_pRenderingSystem));
 
     return true;
 }

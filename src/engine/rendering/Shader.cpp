@@ -32,7 +32,7 @@ void Shader::AddShader(const std::string &filePath, const GLenum shaderType)
         return;
     }
     
-    if (this->LoadShader(filePath, tempShaderId))
+    if (this->loadShader(filePath, tempShaderId))
     {
         if (this->m_program == 0)
         {
@@ -65,7 +65,7 @@ void Shader::LinkProgram()
     glGetProgramiv(this->m_program, GL_LINK_STATUS, &result);
     glGetProgramiv(this->m_program, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-    if (result == GL_FALSE || infoLogLength != 0)
+    if (result == GL_FALSE && infoLogLength != 0)
     {
         // Could not link the program
         std::vector<GLchar> errorLog(infoLogLength);
@@ -83,7 +83,7 @@ void Shader::LinkProgram()
     }
 }
 
-bool Shader::LoadShader(const std::string &filePath, const GLuint shaderId)
+bool Shader::loadShader(const std::string &filePath, const GLuint shaderId)
 {
     std::string shaderCode;
     std::ifstream shaderStream(filePath, std::ios::in);
@@ -111,7 +111,7 @@ bool Shader::LoadShader(const std::string &filePath, const GLuint shaderId)
     glGetShaderiv(shaderId, GL_COMPILE_STATUS, &result);
     glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-    if (result == GL_FALSE || infoLogLength != 0)
+    if (result == GL_FALSE && infoLogLength != 0)
     {
         // Could not compile the shader
         std::vector<GLchar> errorLog(infoLogLength);

@@ -5,7 +5,8 @@
 
 RenderingSystem::RenderingSystem() : m_pWindow(nullptr),
                                      m_pGLContext(nullptr),
-                                     m_vertexBuffer(0)
+                                     m_vertexBuffer(0),
+                                     m_testVal(true)
 {
     m_previousFrameTime_ms = SDL_GetTicks();
     m_frameTime_ms = 1000 / 60;
@@ -52,8 +53,7 @@ bool RenderingSystem::Init()
     const GLfloat vertexBufferData[] = {
         -1.0f, -1.0f, 0.0f,
         1.0f, -1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f
-    };
+        0.0f, 1.0f, 0.0f};
 
     glGenBuffers(1, &m_vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
@@ -65,7 +65,7 @@ bool RenderingSystem::Init()
     shaderTest.AddShader("../res/fragment_test.shader", GL_FRAGMENT_SHADER);
     shaderTest.LinkProgram();
 
-    this->m_shaders.push_back(shaderTest);
+    m_shaders.push_back(shaderTest);
 
     // Generate the model-view-projection matrix components
     glm::mat4 projection = glm::perspective(glm::radians(45.f), 640.f / 480.f, 0.1f, 100.f);
@@ -76,7 +76,7 @@ bool RenderingSystem::Init()
     glm::mat4 model = glm::mat4(1.f);
 
     // Combine the components
-    mvp = projection * view * model;
+    m_mvp = projection * view * model;
 
     return initialized;
 }
@@ -105,8 +105,8 @@ void RenderingSystem::Render()
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    auto it = this->m_shaders.begin();
-    auto end = this->m_shaders.end();
+    auto it = m_shaders.begin();
+    auto end = m_shaders.end();
     for (; it != end; ++it)
     {
         // Cache the id for this shader program
@@ -114,7 +114,7 @@ void RenderingSystem::Render()
 
         // Apply the matrix to the shader
         GLuint matrixId = glGetUniformLocation(programId, "mvp");
-        glUniformMatrix4fv(matrixId, 1, GL_FALSE, &mvp[0][0]);
+        glUniformMatrix4fv(matrixId, 1, GL_FALSE, &m_mvp[0][0]);
 
         glUseProgram(programId);
     }
@@ -152,10 +152,40 @@ void RenderingSystem::Close()
         SDL_DestroyWindow(m_pWindow);
     }
 
-    auto it = this->m_shaders.begin();
-    auto end = this->m_shaders.end();
+    auto it = m_shaders.begin();
+    auto end = m_shaders.end();
     for (; it != end; ++it)
     {
         (*it).DeleteProgram();
+    }
+}
+
+void RenderingSystem::DeleteMe()
+{
+    if (m_testVal)
+    {
+        glm::mat4 projection = glm::perspective(glm::radians(45.f), 640.f / 480.f, 0.1f, 100.f);
+        glm::mat4 view = glm::lookAt(
+            glm::vec3(1, 1, 3),
+            glm::vec3(0, 0, 0),
+            glm::vec3(1, 1, 0));
+        glm::mat4 model = glm::mat4(1.f);
+
+        // Combine the components
+        m_mvp = projection * view * model;
+        m_testVal = false;
+    }
+    else
+    {
+        glm::mat4 projection = glm::perspective(glm::radians(45.f), 640.f / 480.f, 0.1f, 100.f);
+        glm::mat4 view = glm::lookAt(
+            glm::vec3(4, 3, 3),
+            glm::vec3(0, 0, 0),
+            glm::vec3(0, 1, 0));
+        glm::mat4 model = glm::mat4(1.f);
+
+        // Combine the components
+        m_mvp = projection * view * model;
+        m_testVal = true;
     }
 }
