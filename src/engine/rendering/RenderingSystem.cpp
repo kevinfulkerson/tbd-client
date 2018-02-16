@@ -51,9 +51,9 @@ bool RenderingSystem::Init()
     glBindVertexArray(vertexArrayId);
 
     const GLfloat vertexBufferData[] = {
-        -1.0f, -1.0f, 0.0f,
-        1.0f, -1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f};
+        -1.f, 0.f, 1.f,
+        1.f, 0.f, 1.f,
+        0.f, 0.f, -1.f};
 
     glGenBuffers(1, &m_vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
@@ -70,9 +70,9 @@ bool RenderingSystem::Init()
     // Generate the model-view-projection matrix components
     glm::mat4 projection = glm::perspective(glm::radians(45.f), 640.f / 480.f, 0.1f, 100.f);
     glm::mat4 view = glm::lookAt(
-        glm::vec3(4, 3, 3),
-        glm::vec3(0, 0, 0),
-        glm::vec3(0, 1, 0));
+        glm::vec3(0.f, 1.f, 3.f),
+        glm::vec3(0.f, 0.f, 0.f),
+        glm::vec3(0.f, 1.f, 0.f));
     glm::mat4 model = glm::mat4(1.f);
 
     // Combine the components
@@ -166,9 +166,9 @@ void RenderingSystem::DeleteMe()
     {
         glm::mat4 projection = glm::perspective(glm::radians(45.f), 640.f / 480.f, 0.1f, 100.f);
         glm::mat4 view = glm::lookAt(
-            glm::vec3(1, 1, 3),
-            glm::vec3(0, 0, 0),
-            glm::vec3(1, 1, 0));
+            glm::vec3(0.f, 1.5f, 3.f),
+            glm::vec3(0.f, 0.f, 0.f),
+            glm::vec3(0.f, 1.f, 0.f));
         glm::mat4 model = glm::mat4(1.f);
 
         // Combine the components
@@ -179,9 +179,9 @@ void RenderingSystem::DeleteMe()
     {
         glm::mat4 projection = glm::perspective(glm::radians(45.f), 640.f / 480.f, 0.1f, 100.f);
         glm::mat4 view = glm::lookAt(
-            glm::vec3(4, 3, 3),
-            glm::vec3(0, 0, 0),
-            glm::vec3(0, 1, 0));
+            glm::vec3(0.f, 1.f, 3.f),
+            glm::vec3(0.f, 0.f, 0.f),
+            glm::vec3(0.f, 1.f, 0.f));
         glm::mat4 model = glm::mat4(1.f);
 
         // Combine the components
