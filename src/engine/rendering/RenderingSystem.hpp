@@ -1,10 +1,11 @@
-#include "SDL2/SDL.h"
 #include <cstdint>
 #include <vector>
 
-#include "Shader.hpp"
+#include "SDL2/SDL.h"
 #include "GL/glew.h"
 #include "glm/glm.hpp"
+
+#include "src/engine/rendering/Shader.hpp"
 
 class RenderingSystem
 {

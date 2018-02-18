@@ -1,4 +1,4 @@
-#include "InputSystem.hpp"
+#include "src/engine/input/InputSystem.hpp"
 
 InputSystem::InputSystem() : m_isQPressed(false)
 {

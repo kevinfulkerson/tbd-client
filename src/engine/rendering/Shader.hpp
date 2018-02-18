@@ -1,6 +1,7 @@
-#include "GL/glew.h"
 #include <string>
 #include <vector>
+
+#include "GL/glew.h"
 
 class Shader
 {

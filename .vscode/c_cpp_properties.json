@@ -27,14 +27,13 @@
             "name": "Linux",
             "includePath": [
                 "/usr/include/c++/5",
-                "/usr/include/x86_64-linux-gnu/c++/5",
                 "/usr/include/c++/5/backward",
-                "/usr/lib/gcc/x86_64-linux-gnu/5/include",
-                "/usr/local/include",
-                "/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed",
                 "/usr/include/x86_64-linux-gnu",
+                "/usr/include/x86_64-linux-gnu/c++/5",
+                "/usr/lib/gcc/x86_64-linux-gnu/5/include",
+                "/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed",
+                "/usr/local/include",
                 "/usr/include",
-                "/usr/local/include/",
                 "${workspaceRoot}"
             ],
             "defines": [],
@@ -42,14 +41,13 @@
             "browse": {
                 "path": [
                     "/usr/include/c++/5",
-                    "/usr/include/x86_64-linux-gnu/c++/5",
                     "/usr/include/c++/5/backward",
-                    "/usr/lib/gcc/x86_64-linux-gnu/5/include",
-                    "/usr/local/include",
-                    "/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed",
                     "/usr/include/x86_64-linux-gnu",
+                    "/usr/include/x86_64-linux-gnu/c++/5",
+                    "/usr/lib/gcc/x86_64-linux-gnu/5/include",
+                    "/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed",
+                    "/usr/local/include",
                     "/usr/include",
-                    "/usr/local/include/",
                     "${workspaceRoot}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
@@ -62,14 +60,13 @@
                 "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include",
                 "C:/Program Files (x86)/Microsoft Visual Studio 12.0/VC/include",
                 "C:/Program Files (x86)/Microsoft Visual Studio 11.0/VC/include",
+                "C:/MinGW/lib/gcc/mingw32/4.8.1/include",
                 "C:/MinGW/lib/gcc/mingw32/4.8.1/include/c++",
                 "C:/MinGW/lib/gcc/mingw32/4.8.1/include/c++/mingw32",
                 "C:/MinGW/lib/gcc/mingw32/4.8.1/include/c++/backward",
-                "C:/MinGW/lib/gcc/mingw32/4.8.1/include",
-                "C:/MinGW/include",
                 "C:/MinGW/lib/gcc/mingw32/4.8.1/include-fixed",
+                "C:/MinGW/include",
                 "C:/MinGW/mingw32/include",
-                "C:/MinGW/include/",
                 "${workspaceRoot}"
             ],
             "defines": [
@@ -80,8 +77,16 @@
             "browse": {
                 "path": [
                     "C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include/*",
+                    "C:/Program Files (x86)/Microsoft Visual Studio 12.0/VC/include/*",
+                    "C:/Program Files (x86)/Microsoft Visual Studio 11.0/VC/include/*",
+                    "C:/MinGW/lib/gcc/mingw32/4.8.1/include/*",
+                    "C:/MinGW/lib/gcc/mingw32/4.8.1/include/c++/*",
+                    "C:/MinGW/lib/gcc/mingw32/4.8.1/include/c++/mingw32/*",
+                    "C:/MinGW/lib/gcc/mingw32/4.8.1/include/c++/backward/*",
+                    "C:/MinGW/lib/gcc/mingw32/4.8.1/include-fixed/*",
                     "C:/MinGW/include/*",
-                    "${workspaceRoot}"
+                    "C:/MinGW/mingw32/include/*",
+                    "${workspaceRoot}/*"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""

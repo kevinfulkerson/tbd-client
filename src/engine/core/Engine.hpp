@@ -1,6 +1,7 @@
 #include "SDL2/SDL.h"
-#include "../rendering/RenderingSystem.hpp"
-#include "../input/InputSystem.hpp"
+
+#include "src/engine/rendering/RenderingSystem.hpp"
+#include "src/engine/input/InputSystem.hpp"
 
 class Engine
 {

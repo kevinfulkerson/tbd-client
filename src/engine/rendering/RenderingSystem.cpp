@@ -1,6 +1,8 @@
-#include "RenderingSystem.hpp"
+#include "src/engine/rendering/RenderingSystem.hpp"
+
 #include <iostream>
 #include <string>
+
 #include "glm/ext.hpp"
 
 RenderingSystem::RenderingSystem() : m_pWindow(nullptr),
