@@ -1,64 +1,68 @@
 #include "src/engine/input/InputSystem.hpp"
 
-InputSystem::InputSystem() : m_isQPressed(false)
+namespace tbd
 {
-    this->m_qPressHandler = std::bind(&InputSystem::doNothing, this);
-}
-
-/* virtual */
-InputSystem::~InputSystem()
-{
-}
-
-bool InputSystem::Init()
-{
-    return true;
-}
-
-int InputSystem::RegisterEventHandler(SDL_Keycode key, std::function<void()> handler)
-{
-    if (key == SDLK_q)
+    InputSystem::InputSystem() : m_isQPressed(false)
     {
-        this->m_qPressHandler = handler;
+        this->m_qPressHandler = std::bind(&InputSystem::doNothing, this);
     }
 
-    return 0;
-}
-
-int InputSystem::HandleInput()
-{
-    int retVal = 0;
-
-    while (SDL_PollEvent(&m_event) == 1)
+    /* virtual */
+    InputSystem::~InputSystem()
     {
-        // Check if this event directs us to quit the application
-        if (m_event.type == SDL_QUIT)
+    }
+
+    bool InputSystem::Init()
+    {
+        return true;
+    }
+
+    int InputSystem::RegisterEventHandler(SDL_Keycode key,
+                                          std::function<void()> handler)
+    {
+        if (key == SDLK_q)
         {
-            retVal = -1;
+            this->m_qPressHandler = handler;
         }
-        else if (m_event.type == SDL_KEYDOWN)
+
+        return 0;
+    }
+
+    int InputSystem::HandleInput()
+    {
+        int retVal = 0;
+
+        while (SDL_PollEvent(&m_event) == 1)
         {
-            if (m_event.key.keysym.sym == SDLK_q)
+            // Check if this event directs us to quit the application
+            if (m_event.type == SDL_QUIT)
             {
-                this->m_isQPressed = true;
+                retVal = -1;
             }
-        }
-        else if (m_event.type == SDL_KEYUP)
-        {
-            if (m_event.key.keysym.sym == SDLK_q)
+            else if (m_event.type == SDL_KEYDOWN)
             {
-                if (this->m_isQPressed)
+                if (m_event.key.keysym.sym == SDLK_q)
                 {
-                    this->m_qPressHandler();
-                    this->m_isQPressed = false;
+                    this->m_isQPressed = true;
+                }
+            }
+            else if (m_event.type == SDL_KEYUP)
+            {
+                if (m_event.key.keysym.sym == SDLK_q)
+                {
+                    if (this->m_isQPressed)
+                    {
+                        this->m_qPressHandler();
+                        this->m_isQPressed = false;
+                    }
                 }
             }
         }
+
+        return retVal;
     }
 
-    return retVal;
-}
-
-void InputSystem::doNothing()
-{
+    void InputSystem::doNothing()
+    {
+    }
 }

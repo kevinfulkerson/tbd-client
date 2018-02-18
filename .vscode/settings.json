@@ -24,6 +24,7 @@
         "cmath": "cpp",
         "cstddef": "cpp",
         "fstream": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "functional": "cpp"
     }
 }
