@@ -63,8 +63,11 @@ namespace tbd
         // Perform any additional initializations
         m_pRenderingSystem->SetFPS(60);
         m_pInputSystem->RegisterEventHandler(
-            SDLK_q,
-            std::bind(&RenderingSystem::DeleteMe, this->m_pRenderingSystem));
+            SDLK_w,
+            std::bind(&RenderingSystem::MoveCameraUp, this->m_pRenderingSystem));
+        m_pInputSystem->RegisterEventHandler(
+            SDLK_s,
+            std::bind(&RenderingSystem::MoveCameraDown, this->m_pRenderingSystem));
 
         return true;
     }

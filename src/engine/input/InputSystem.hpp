@@ -18,13 +18,15 @@ namespace tbd
         int HandleInput();
 
       private:
-        void doNothing();
+        inline void doNothing() {}
 
         SDL_Event m_event;
 
         // TODO: create a vector of key events to commands
-        bool m_isQPressed;
-        std::function<void()> m_qPressHandler;
+        bool m_isWPressed;
+        bool m_isSPressed;
+        std::function<void()> m_wPressHandler;
+        std::function<void()> m_sPressHandler;
     };
 }
 

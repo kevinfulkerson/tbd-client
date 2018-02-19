@@ -73,16 +73,21 @@ namespace tbd
         m_shaders.push_back(shaderTest);
 
         // Generate the model-view-projection matrix components
-        glm::mat4 projection = glm::perspective(
-            glm::radians(45.f), 640.f / 480.f, 0.1f, 100.f);
-        glm::mat4 view = glm::lookAt(
-            glm::vec3(0.f, 1.f, 3.f),
-            glm::vec3(0.f, 0.f, 0.f),
-            glm::vec3(0.f, 1.f, 0.f));
+        m_currentCamera.SetAspectRatio(640.f / 480.f);
+        m_currentCamera.SetFOVDegrees(45.f);
+        m_currentCamera.SetNear(0.1f);
+        m_currentCamera.SetFar(100.f);
+
+        m_currentCamera.SetLocation(glm::vec3(0.f, 1.5f, 3.f));
+        m_currentCamera.SetFacing(glm::vec3(0.f, 0.f, 0.f));
+        m_currentCamera.SetUp(glm::vec3(0.f, 1.f, 0.f));
+
         glm::mat4 model = glm::mat4(1.f);
 
         // Combine the components
-        m_mvp = projection * view * model;
+        m_mvp = m_currentCamera.GetProjectionMatrix() *
+                m_currentCamera.GetViewMatrix() *
+                model;
 
         return initialized;
     }
@@ -166,35 +171,26 @@ namespace tbd
         }
     }
 
-    void RenderingSystem::DeleteMe()
+    void RenderingSystem::MoveCameraUp()
     {
-        if (m_testVal)
-        {
-            glm::mat4 projection = glm::perspective(
-                glm::radians(45.f), 640.f / 480.f, 0.1f, 100.f);
-            glm::mat4 view = glm::lookAt(
-                glm::vec3(0.f, 1.5f, 3.f),
-                glm::vec3(0.f, 0.f, 0.f),
-                glm::vec3(0.f, 1.f, 0.f));
-            glm::mat4 model = glm::mat4(1.f);
+        m_currentCamera.MoveLocation(glm::vec3(0.f, 0.1f, 0.f));
+        glm::mat4 model = glm::mat4(1.f);
 
-            // Combine the components
-            m_mvp = projection * view * model;
-            m_testVal = false;
-        }
-        else
-        {
-            glm::mat4 projection = glm::perspective(
-                glm::radians(45.f), 640.f / 480.f, 0.1f, 100.f);
-            glm::mat4 view = glm::lookAt(
-                glm::vec3(0.f, 1.f, 3.f),
-                glm::vec3(0.f, 0.f, 0.f),
-                glm::vec3(0.f, 1.f, 0.f));
-            glm::mat4 model = glm::mat4(1.f);
+        // Combine the components
+        m_mvp = m_currentCamera.GetProjectionMatrix() *
+                m_currentCamera.GetViewMatrix() *
+                model;
+        m_testVal = true;
+    }
 
-            // Combine the components
-            m_mvp = projection * view * model;
-            m_testVal = true;
-        }
+    void RenderingSystem::MoveCameraDown()
+    {
+        m_currentCamera.MoveLocation(glm::vec3(0.f, -0.1f, 0.f));
+        glm::mat4 model = glm::mat4(1.f);
+
+        // Combine the components
+        m_mvp = m_currentCamera.GetProjectionMatrix() *
+                m_currentCamera.GetViewMatrix() *
+                model;
     }
 }

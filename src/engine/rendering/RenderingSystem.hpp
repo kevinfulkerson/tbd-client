@@ -9,6 +9,7 @@
 #include "glm/glm.hpp"
 
 #include "src/engine/rendering/Shader.hpp"
+#include "src/engine/rendering/Camera.hpp"
 
 namespace tbd
 {
@@ -24,11 +25,13 @@ namespace tbd
         void Render();
         void Close();
 
-        void DeleteMe();
+        void MoveCameraUp();
+        void MoveCameraDown();
 
       private:
         SDL_Window *m_pWindow;
         SDL_GLContext m_pGLContext;
+        Camera m_currentCamera;
 
         GLuint m_vertexBuffer;
         std::vector<Shader> m_shaders;
