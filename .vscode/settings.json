@@ -25,6 +25,12 @@
         "cstddef": "cpp",
         "fstream": "cpp",
         "sstream": "cpp",
-        "functional": "cpp"
+        "functional": "cpp",
+        "array": "cpp",
+        "tuple": "cpp",
+        "utility": "cpp",
+        "cstdarg": "cpp",
+        "cstring": "cpp",
+        "ctime": "cpp"
     }
 }

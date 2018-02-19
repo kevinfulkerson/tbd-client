@@ -2,11 +2,8 @@
 
 namespace tbd
 {
-    InputSystem::InputSystem() : m_isWPressed(false),
-                                 m_isSPressed(false)
+    InputSystem::InputSystem()
     {
-        this->m_wPressHandler = std::bind(&InputSystem::doNothing, this);
-        this->m_sPressHandler = std::bind(&InputSystem::doNothing, this);
     }
 
     /* virtual */
@@ -17,21 +14,6 @@ namespace tbd
     bool InputSystem::Init()
     {
         return true;
-    }
-
-    int InputSystem::RegisterEventHandler(SDL_Keycode key,
-                                          std::function<void()> handler)
-    {
-        if (key == SDLK_w)
-        {
-            this->m_wPressHandler = handler;
-        }
-        else if (key == SDLK_s)
-        {
-            this->m_sPressHandler = handler;
-        }
-
-        return 0;
     }
 
     int InputSystem::HandleInput()
@@ -47,36 +29,114 @@ namespace tbd
             }
             else if (m_event.type == SDL_KEYDOWN)
             {
-                if (m_event.key.keysym.sym == SDLK_w)
+                // On initial key down, we assume this input is a hold command
+                CommandType type;
+                type.key = m_event.key.keysym.sym;
+                type.style = CommandStyle::Hold;
+
+                // Try to find this command in the map
+                CommandMap::iterator holdIt;
+                if ((holdIt = m_commandMap.find(type)) != m_commandMap.end())
                 {
-                    this->m_isWPressed = true;
+                    // The command has been registered, fire it
+                    holdIt->second.command->Execute();
+
+                    // Set the meta data so we can track this command's execution
+                    holdIt->second.active = true;
+                    holdIt->second.previousPoint = CommandAttachPoint::Start;
                 }
-                else if (m_event.key.keysym.sym == SDLK_s)
+
+                // Since it could be possible to do multiple things with a
+                // single key press depending on the interaction, we will
+                // continue processing for other events
+
+                // First, look for a normal press event
+                type.style = CommandStyle::Press;
+                CommandMap::iterator pressIt;
+                if ((pressIt = m_commandMap.find(type)) != m_commandMap.end())
                 {
-                    this->m_isSPressed = true;
+                    // Check to see if this command should be activated now
+                    if (pressIt->second.previousPoint == CommandAttachPoint::End &&
+                        pressIt->second.activatePoint == CommandAttachPoint::Start)
+                    {
+                        pressIt->second.command->Execute();
+                    }
+
+                    pressIt->second.active = true;
+                    pressIt->second.previousPoint = CommandAttachPoint::Start;
+                }
+
+                // Next, look for a long press event
+                type.style = CommandStyle::LongPress;
+                CommandMap::iterator longIt;
+                if ((longIt = m_commandMap.find(type)) != m_commandMap.end())
+                {
+                    // TODO: use a timestamp check to determine if this should
+                    // be activated now
+
+                    longIt->second.active = true;
+                    longIt->second.previousPoint = CommandAttachPoint::Start;
                 }
             }
             else if (m_event.type == SDL_KEYUP)
             {
-                if (m_event.key.keysym.sym == SDLK_w)
+                // On key up, we mirror key down and start with holds
+                CommandType type;
+                type.key = m_event.key.keysym.sym;
+                type.style = CommandStyle::Hold;
+
+                CommandMap::iterator holdIt;
+                if ((holdIt = m_commandMap.find(type)) != m_commandMap.end())
                 {
-                    if (this->m_isWPressed)
-                    {
-                        this->m_wPressHandler();
-                        this->m_isWPressed = false;
-                    }
+                    holdIt->second.active = false;
+                    holdIt->second.previousPoint = CommandAttachPoint::Unset;
                 }
-                else if (m_event.key.keysym.sym == SDLK_s)
+
+                // First, look for a normal press event
+                type.style = CommandStyle::Press;
+                CommandMap::iterator pressIt;
+                if ((pressIt = m_commandMap.find(type)) != m_commandMap.end())
                 {
-                    if (this->m_isSPressed)
+                    if (pressIt->second.previousPoint == CommandAttachPoint::Start &&
+                        pressIt->second.activatePoint == CommandAttachPoint::End)
                     {
-                        this->m_sPressHandler();
-                        this->m_isSPressed = false;
+                        pressIt->second.command->Execute();
                     }
+
+                    pressIt->second.active = false;
+                    pressIt->second.previousPoint = CommandAttachPoint::End;
+                }
+
+                // Next, look for a long press event
+                type.style = CommandStyle::LongPress;
+                CommandMap::iterator longIt;
+                if ((longIt = m_commandMap.find(type)) != m_commandMap.end())
+                {
+                    // TODO: use a timestamp check to determine if this should
+                    // be activated now
+
+                    longIt->second.active = false;
+                    longIt->second.previousPoint = CommandAttachPoint::End;
                 }
             }
         }
 
         return retVal;
+    }
+
+    int InputSystem::RegisterEventHandler(CommandType type,
+                                          CommandAttachPoint attachmentPoint,
+                                          std::unique_ptr<ICommand> commandSink)
+    {
+        CommandMetadata meta;
+        meta.activatePoint = attachmentPoint;
+        meta.active = false;
+        meta.command = std::move(commandSink);
+        meta.previousPoint = CommandAttachPoint::Unset;
+
+        // TODO: check return value
+        m_commandMap.insert(CommandMap::value_type(type, std::move(meta)));
+
+        return 0;
     }
 }

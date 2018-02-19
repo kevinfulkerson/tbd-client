@@ -2,11 +2,27 @@
 #define _INPUTSYSTEM_H_
 
 #include <functional>
+#include <map>
+#include <memory>
 
 #include "SDL2/SDL.h"
 
+#include "src/engine/input/commands/CommandFormat.hpp"
+
 namespace tbd
 {
+    struct CommandMetadata
+    {
+        bool active;
+        CommandAttachPoint previousPoint;
+
+        // TODO: add timing for long/short press distinction
+        //double timestamp;
+
+        CommandAttachPoint activatePoint;
+        std::unique_ptr<ICommand> command;
+    };
+
     class InputSystem
     {
       public:
@@ -14,19 +30,16 @@ namespace tbd
         virtual ~InputSystem();
 
         bool Init();
-        int RegisterEventHandler(SDL_Keycode key, std::function<void()> handler);
         int HandleInput();
+        int RegisterEventHandler(CommandType type,
+                                 CommandAttachPoint attachmentPoint,
+                                 std::unique_ptr<ICommand> commandSink);
 
       private:
-        inline void doNothing() {}
-
         SDL_Event m_event;
 
-        // TODO: create a vector of key events to commands
-        bool m_isWPressed;
-        bool m_isSPressed;
-        std::function<void()> m_wPressHandler;
-        std::function<void()> m_sPressHandler;
+        typedef std::map<CommandType, CommandMetadata> CommandMap;
+        CommandMap m_commandMap;
     };
 }
 

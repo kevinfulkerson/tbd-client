@@ -1,4 +1,5 @@
 #include "src/engine/core/Engine.hpp"
+#include "src/engine/input/commands/CommandFunc.hpp"
 
 #include <cstdio>
 #include <iostream>
@@ -62,12 +63,22 @@ namespace tbd
 
         // Perform any additional initializations
         m_pRenderingSystem->SetFPS(60);
+
+        CommandType wType;
+        wType.key = SDLK_w;
+        wType.style = CommandStyle::Press;
         m_pInputSystem->RegisterEventHandler(
-            SDLK_w,
-            std::bind(&RenderingSystem::MoveCameraUp, this->m_pRenderingSystem));
+            wType, CommandAttachPoint::End,
+            std::make_unique<CommandFunc>(std::bind(
+                &RenderingSystem::MoveCameraUp, this->m_pRenderingSystem)));
+
+        CommandType sType;
+        sType.key = SDLK_s;
+        sType.style = CommandStyle::Press;
         m_pInputSystem->RegisterEventHandler(
-            SDLK_s,
-            std::bind(&RenderingSystem::MoveCameraDown, this->m_pRenderingSystem));
+            sType, CommandAttachPoint::End,
+            std::make_unique<CommandFunc>(std::bind(
+                &RenderingSystem::MoveCameraDown, this->m_pRenderingSystem)));
 
         return true;
     }
