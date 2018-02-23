@@ -46,7 +46,14 @@ namespace tbd
 
         m_sdlInitialized = true;
         m_pRenderingSystem = new RenderingSystem();
-        m_pInputSystem = new InputSystem();
+
+        CommandScheme scheme;
+        scheme.holdAcceleration = 0;
+        scheme.holdDelay = 0;
+        scheme.holdPeriod = 0;
+        scheme.longPressDuration = 500;
+        scheme.pressDuration = 0;
+        m_pInputSystem = new InputSystem(scheme);
 
         // Attempt to initialize each system
         // Should eventually change this to iterate through a list or something
@@ -66,17 +73,17 @@ namespace tbd
 
         CommandType wType;
         wType.key = SDLK_w;
-        wType.style = CommandStyle::Press;
+        wType.style = CommandStyle::Hold;
         m_pInputSystem->RegisterEventHandler(
-            wType, CommandAttachPoint::End,
+            wType, CommandAttachPoint::Unset,
             std::make_unique<CommandFunc>(std::bind(
                 &RenderingSystem::MoveCameraUp, this->m_pRenderingSystem)));
 
         CommandType sType;
         sType.key = SDLK_s;
-        sType.style = CommandStyle::Press;
+        sType.style = CommandStyle::LongPress;
         m_pInputSystem->RegisterEventHandler(
-            sType, CommandAttachPoint::End,
+            sType, CommandAttachPoint::Start,
             std::make_unique<CommandFunc>(std::bind(
                 &RenderingSystem::MoveCameraDown, this->m_pRenderingSystem)));
 

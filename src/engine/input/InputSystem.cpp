@@ -2,7 +2,7 @@
 
 namespace tbd
 {
-    InputSystem::InputSystem()
+    InputSystem::InputSystem(const CommandScheme &scheme) : m_commandScheme(scheme)
     {
     }
 
@@ -71,10 +71,22 @@ namespace tbd
                 CommandMap::iterator longIt;
                 if ((longIt = m_commandMap.find(type)) != m_commandMap.end())
                 {
-                    // TODO: use a timestamp check to determine if this should
-                    // be activated now
+                    if (longIt->second.timestamp == 0)
+                    {
+                        longIt->second.active = true;
+                        longIt->second.timestamp = SDL_GetTicks();
+                    }
+                    else if (longIt->second.activatePoint == CommandAttachPoint::Start &&
+                             longIt->second.active)
+                    {
+                        if (SDL_GetTicks() - longIt->second.timestamp >
+                            m_commandScheme.longPressDuration)
+                        {
+                            longIt->second.active = false;
+                            longIt->second.command->Execute();
+                        }
+                    }
 
-                    longIt->second.active = true;
                     longIt->second.previousPoint = CommandAttachPoint::Start;
                 }
             }
@@ -112,9 +124,17 @@ namespace tbd
                 CommandMap::iterator longIt;
                 if ((longIt = m_commandMap.find(type)) != m_commandMap.end())
                 {
-                    // TODO: use a timestamp check to determine if this should
-                    // be activated now
+                    if (longIt->second.timestamp != 0 &&
+                        longIt->second.activatePoint == CommandAttachPoint::End)
+                    {
+                        if (SDL_GetTicks() - longIt->second.timestamp >
+                            m_commandScheme.longPressDuration)
+                        {
+                            longIt->second.command->Execute();
+                        }
+                    }
 
+                    longIt->second.timestamp = 0;
                     longIt->second.active = false;
                     longIt->second.previousPoint = CommandAttachPoint::End;
                 }
@@ -131,6 +151,7 @@ namespace tbd
         CommandMetadata meta;
         meta.activatePoint = attachmentPoint;
         meta.active = false;
+        meta.timestamp = 0;
         meta.command = std::move(commandSink);
         meta.previousPoint = CommandAttachPoint::Unset;
 

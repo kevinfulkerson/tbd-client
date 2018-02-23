@@ -15,9 +15,7 @@ namespace tbd
     {
         bool active;
         CommandAttachPoint previousPoint;
-
-        // TODO: add timing for long/short press distinction
-        //double timestamp;
+        uint32_t timestamp;
 
         CommandAttachPoint activatePoint;
         std::unique_ptr<ICommand> command;
@@ -26,7 +24,7 @@ namespace tbd
     class InputSystem
     {
       public:
-        InputSystem();
+        InputSystem(const CommandScheme &scheme);
         virtual ~InputSystem();
 
         bool Init();
@@ -37,6 +35,7 @@ namespace tbd
 
       private:
         SDL_Event m_event;
+        CommandScheme m_commandScheme;
 
         typedef std::map<CommandType, CommandMetadata> CommandMap;
         CommandMap m_commandMap;
