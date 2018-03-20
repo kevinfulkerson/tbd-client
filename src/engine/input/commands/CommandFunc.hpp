@@ -14,6 +14,7 @@ namespace tbd
         CommandFunc(const std::function<void()> &func);
         virtual ~CommandFunc();
 
+        virtual bool CanExecute();
         virtual void Execute();
 
       private:

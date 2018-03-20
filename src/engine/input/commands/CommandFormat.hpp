@@ -3,7 +3,7 @@
 
 #include "SDL2/SDL.h"
 
-#include "src/engine/input/commands/ICommand.hpp"
+#include "src/engine/input/commands/Command.hpp"
 
 namespace tbd
 {
@@ -23,7 +23,6 @@ namespace tbd
 
     struct CommandScheme
     {
-        float pressDuration;
         float longPressDuration;
         float holdDelay;
         float holdPeriod;

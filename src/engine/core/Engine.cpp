@@ -52,7 +52,6 @@ namespace tbd
         scheme.holdDelay = 0;
         scheme.holdPeriod = 0;
         scheme.longPressDuration = 500;
-        scheme.pressDuration = 0;
         m_pInputSystem = new InputSystem(scheme);
 
         // Attempt to initialize each system

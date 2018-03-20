@@ -18,8 +18,10 @@ namespace tbd
         uint32_t timestamp;
 
         CommandAttachPoint activatePoint;
-        std::unique_ptr<ICommand> command;
+        std::unique_ptr<Command> command;
     };
+
+    typedef std::map<CommandType, CommandMetadata> CommandMap;
 
     class InputSystem
     {
@@ -31,13 +33,12 @@ namespace tbd
         int HandleInput();
         int RegisterEventHandler(CommandType type,
                                  CommandAttachPoint attachmentPoint,
-                                 std::unique_ptr<ICommand> commandSink);
+                                 std::unique_ptr<Command> commandSink);
 
       private:
         SDL_Event m_event;
         CommandScheme m_commandScheme;
 
-        typedef std::map<CommandType, CommandMetadata> CommandMap;
         CommandMap m_commandMap;
     };
 }
