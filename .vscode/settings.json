@@ -31,6 +31,7 @@
         "utility": "cpp",
         "cstdarg": "cpp",
         "cstring": "cpp",
-        "ctime": "cpp"
+        "ctime": "cpp",
+        "memory": "cpp"
     }
 }

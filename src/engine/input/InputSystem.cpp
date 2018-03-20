@@ -74,12 +74,12 @@ namespace tbd
                     if (longIt->second.timestamp == 0)
                     {
                         longIt->second.active = true;
-                        longIt->second.timestamp = SDL_GetTicks();
+                        longIt->second.timestamp = m_event.key.timestamp;
                     }
                     else if (longIt->second.activatePoint == CommandAttachPoint::Start &&
                              longIt->second.active)
                     {
-                        if (SDL_GetTicks() - longIt->second.timestamp >
+                        if (m_event.key.timestamp - longIt->second.timestamp >
                             m_commandScheme.longPressDuration)
                         {
                             longIt->second.active = false;
@@ -127,7 +127,7 @@ namespace tbd
                     if (longIt->second.timestamp != 0 &&
                         longIt->second.activatePoint == CommandAttachPoint::End)
                     {
-                        if (SDL_GetTicks() - longIt->second.timestamp >
+                        if (m_event.key.timestamp - longIt->second.timestamp >
                             m_commandScheme.longPressDuration)
                         {
                             longIt->second.command->Execute();
