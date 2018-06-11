@@ -34,6 +34,7 @@ namespace tbd
         Camera m_currentCamera;
 
         GLuint m_vertexBuffer;
+        GLuint m_elementBuffer;
         std::vector<Shader> m_shaders;
         glm::mat4 m_mvp;
 
