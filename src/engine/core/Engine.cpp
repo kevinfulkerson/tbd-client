@@ -81,9 +81,9 @@ namespace tbd
 
         CommandType sType;
         sType.key = SDLK_s;
-        sType.style = CommandStyle::LongPress;
+        sType.style = CommandStyle::Hold;
         m_pInputSystem->RegisterEventHandler(
-            sType, CommandAttachPoint::Start,
+            sType, CommandAttachPoint::Unset,
             std::make_unique<CommandFunc>(std::bind(
                 &RenderingSystem::MoveCameraDown, this->m_pRenderingSystem)));
 

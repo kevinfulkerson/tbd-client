@@ -33,6 +33,7 @@ namespace tbd
         SDL_GLContext m_pGLContext;
         Camera m_currentCamera;
 
+        GLuint m_vertexArrayId;
         GLuint m_vertexBuffer;
         GLuint m_elementBuffer;
         std::vector<Shader> m_shaders;
@@ -40,8 +41,6 @@ namespace tbd
 
         uint32_t m_previousFrameTime_ms;
         uint32_t m_frameTime_ms;
-
-        bool m_testVal;
     };
 }
 

@@ -32,6 +32,7 @@
         "cstdarg": "cpp",
         "cstring": "cpp",
         "ctime": "cpp",
-        "memory": "cpp"
+        "memory": "cpp",
+        "vector": "cpp"
     }
 }

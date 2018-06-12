@@ -9,8 +9,9 @@ namespace tbd
 {
     RenderingSystem::RenderingSystem() : m_pWindow(nullptr),
                                          m_pGLContext(nullptr),
+                                         m_vertexArrayId(0),
                                          m_vertexBuffer(0),
-                                         m_testVal(true)
+                                         m_elementBuffer(0)
     {
         m_previousFrameTime_ms = SDL_GetTicks();
         m_frameTime_ms = 1000 / 60;
@@ -50,32 +51,39 @@ namespace tbd
             return false;
         }
 
-        GLuint vertexArrayId;
-        glGenVertexArrays(1, &vertexArrayId);
-        glBindVertexArray(vertexArrayId);
+        glGenVertexArrays(1, &m_vertexArrayId);
+        glBindVertexArray(m_vertexArrayId);
 
         const GLfloat vertexBufferData[] = {
-            -1.f, 0.f, 1.f,
-            1.f, 0.f, 1.f,
-            0.f, 0.f, -1.f};
+            -0.5f, 0.f, 0.5f,  // base vertex 1
+            -0.5f, 0.f, -0.5f, // base vertex 2
+            0.5f, 0.f, 0.5f,   // base vertex 3
+            0.5f, 0.f, -0.5f,  // base vertex 4
+            0.f, 0.5f, 0.f     // apex vertex
+        };
 
-        const GLint elementIndexData[] = {
-            0, 1, 2
+        const GLuint elementIndexData[] = {
+            0, 1, 4, // side 1
+            0, 2, 4, // side 2
+            2, 3, 4, // side 3
+            3, 1, 4, // side 4
+            0, 1, 3, // base part 1
+            0, 2, 3  // base part 2
         };
 
         glGenBuffers(1, &m_vertexBuffer);
         glGenBuffers(1, &m_elementBuffer);
-        
+
         glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertexBufferData),
-            vertexBufferData, GL_STATIC_DRAW);
-        
+                     vertexBufferData, GL_STATIC_DRAW);
+
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBuffer);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elementIndexData),
-            elementIndexData, GL_STATIC_DRAW);
+                     elementIndexData, GL_STATIC_DRAW);
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void *)0);
         glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void *)0);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
@@ -145,8 +153,8 @@ namespace tbd
             glUseProgram(programId);
         }
 
-        glBindVertexArray(m_vertexBuffer);
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(m_vertexArrayId);
+        glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
 
         SDL_GL_SwapWindow(m_pWindow);
     }
@@ -155,6 +163,8 @@ namespace tbd
     {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glDeleteBuffers(1, &m_vertexBuffer);
+        glDeleteBuffers(1, &m_elementBuffer);
+        glDeleteVertexArrays(1, &m_vertexArrayId);
 
         if (m_pGLContext)
         {
@@ -183,7 +193,6 @@ namespace tbd
         m_mvp = m_currentCamera.GetProjectionMatrix() *
                 m_currentCamera.GetViewMatrix() *
                 model;
-        m_testVal = true;
     }
 
     void RenderingSystem::MoveCameraDown()
@@ -196,4 +205,4 @@ namespace tbd
                 m_currentCamera.GetViewMatrix() *
                 model;
     }
-}
+} // namespace tbd
