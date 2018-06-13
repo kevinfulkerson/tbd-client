@@ -55,11 +55,11 @@ namespace tbd
         glBindVertexArray(m_vertexArrayId);
 
         const GLfloat vertexBufferData[] = {
-            -0.5f, 0.f, 0.5f,  // base vertex 1
-            -0.5f, 0.f, -0.5f, // base vertex 2
-            0.5f, 0.f, 0.5f,   // base vertex 3
-            0.5f, 0.f, -0.5f,  // base vertex 4
-            0.f, 0.5f, 0.f     // apex vertex
+            -0.5f, 0.0f, 0.5f,  // base vertex 1
+            -0.5f, 0.0f, -0.5f, // base vertex 2
+            0.5f, 0.0f, 0.5f,   // base vertex 3
+            0.5f, 0.0f, -0.5f,  // base vertex 4
+            0.0f, 0.5f, 0.0f    // apex vertex
         };
 
         const GLuint elementIndexData[] = {
@@ -83,7 +83,8 @@ namespace tbd
                      elementIndexData, GL_STATIC_DRAW);
 
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void *)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                              3 * sizeof(GLfloat), (void *)0);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
@@ -149,6 +150,9 @@ namespace tbd
             // Apply the matrix to the shader
             GLuint matrixId = glGetUniformLocation(programId, "mvp");
             glUniformMatrix4fv(matrixId, 1, GL_FALSE, &m_mvp[0][0]);
+
+            GLuint timeId = glGetUniformLocation(programId, "time");
+            glUniform1f(timeId, SDL_GetTicks()/1000.f);
 
             glUseProgram(programId);
         }
